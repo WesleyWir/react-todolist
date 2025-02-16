@@ -1,6 +1,7 @@
+import { TodoListProps } from "../types"
 import TodoCard from "./TodoCard"
 
-export default function TodoList(props: { todos: string[] }) {
+export default function TodoList(props: TodoListProps) {
     const { todos } = props
     return (
         <ul className='main'>

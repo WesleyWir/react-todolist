@@ -26,6 +26,7 @@ button {
 header {
   display: flex;
   align-items: stretch;
+  margin-top: 10%;
 }
 
 header,
@@ -79,6 +80,7 @@ p {
   padding: 14px;
   border-radius: 14px;
   background: white;
+  margin-top: 10px;
 }
 
 .todoItem p {
@@ -100,6 +102,11 @@ p {
 
 .actionsContainer button:hover {
   opacity: 0.7;
+}
+
+#form-todo-input{
+  display: flex;
+  width: 100%;
 }
 
 
