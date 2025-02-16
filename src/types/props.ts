@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Todo } from "./models";
 
 export interface TodoInputProps {
     editing: boolean;
@@ -15,7 +16,8 @@ export interface TodoCardProps {
 }
 
 export interface TodoListProps {
-    todos: string[]
+    todos: Todo[]
     handleDeleteTodo: (index: number) => void;
     handleEditTodo: (index: number) => void;
+    handleChangeChecked: (index: number) => void;
 }

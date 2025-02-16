@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react"
 import TodoInput from "./components/TodoInput"
 import TodoList from "./components/TodoList"
+import { Todo } from "./types"
 
 function App() {
-  const [todos, setTodos] = useState<string[]>([])
+  const [todos, setTodos] = useState<Todo[]>([])
   const [todoValue, setTodoValue] = useState<string>('')
   const [editing, setEditing] = useState<boolean>(false)
   const [editingIndex, setEditingIndex] = useState<null | number>(null)
 
-  function persistData(todos: string[]) {
+  function persistData(todos: Todo[]) {
     localStorage.setItem('todos', JSON.stringify({ todos }));
   }
 
@@ -27,13 +28,21 @@ function App() {
       const index = editingIndex;
       if (index === null) return;
       const newTodoList = [...todos];
-      newTodoList[index] = todo;
+      newTodoList[index] = {
+        id: Date.now(),
+        title: todo,
+        checked: newTodoList[index].checked
+      };
       persistData(newTodoList);
       setTodos(newTodoList);
       resetEdit();
       return;
     }
-    const newTodoList = [...todos, todo];
+    const newTodoList = [...todos, {
+      id: Date.now(),
+      title: todo,
+      completed: false
+    }];
     persistData(newTodoList);
     setTodos(newTodoList);
   }
@@ -46,9 +55,16 @@ function App() {
   }
 
   function handleEditTodo(index: number) {
-    setTodoValue(todos[index]);
+    setTodoValue(todos[index].title);
     setEditing(true);
     setEditingIndex(index);
+  }
+
+  function handleChangeChecked(index: number) {
+    const newTodoList = [...todos];
+    newTodoList[index].checked =!newTodoList[index].checked;
+    persistData(newTodoList);
+    setTodos(newTodoList);
   }
 
   // initialize
@@ -66,7 +82,12 @@ function App() {
 
   return (
     <main>
-      <TodoList handleEditTodo={handleEditTodo} handleDeleteTodo={handleDeleteTodo} todos={todos} />
+      <TodoList 
+      handleEditTodo={handleEditTodo} 
+      handleDeleteTodo={handleDeleteTodo}
+      handleChangeChecked={handleChangeChecked} 
+      todos={todos} 
+      />
       <TodoInput editing={editing} todoValue={todoValue} setTodoValue={setTodoValue} handleAddTodos={handleAddTodos} />
     </main>
   )
