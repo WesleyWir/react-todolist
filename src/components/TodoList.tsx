@@ -4,7 +4,7 @@ import TodoCard from "./TodoCard"
 export default function TodoList(props: TodoListProps) {
     const { todos } = props
     return (
-        <ul className='main'>
+        <ul className='main scrollbar'>
             {todos.map((todo, index) => {
                 return (
                     <TodoCard {...props} key={index} index={index}>

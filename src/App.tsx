@@ -4,14 +4,36 @@ import TodoList from "./components/TodoList"
 
 function App() {
   const [todos, setTodos] = useState<string[]>([])
-  const [todoValue, setTodoValue] = useState('')
+  const [todoValue, setTodoValue] = useState<string>('')
+  const [editing, setEditing] = useState<boolean>(false)
+  const [editingIndex, setEditingIndex] = useState<null | number>(null)
 
   function persistData(todos: string[]) {
     localStorage.setItem('todos', JSON.stringify({ todos }));
   }
 
-  function handleAddTodos(newTodo: string) {
-    const newTodoList = [...todos, newTodo];
+  function resetEdit() {
+    setEditing(false);
+    setEditingIndex(null);
+    setTodoValue('');
+  }
+
+  function handleAddTodos(todo: string) {
+    if (todo.length == 0) {
+      resetEdit();
+      return;
+    }
+    if (editing) {
+      const index = editingIndex;
+      if (index === null) return;
+      const newTodoList = [...todos];
+      newTodoList[index] = todo;
+      persistData(newTodoList);
+      setTodos(newTodoList);
+      resetEdit();
+      return;
+    }
+    const newTodoList = [...todos, todo];
     persistData(newTodoList);
     setTodos(newTodoList);
   }
@@ -24,9 +46,9 @@ function App() {
   }
 
   function handleEditTodo(index: number) {
-    const value: string = todos[index];
-    setTodoValue(value);
-    handleDeleteTodo(index);
+    setTodoValue(todos[index]);
+    setEditing(true);
+    setEditingIndex(index);
   }
 
   // initialize
@@ -44,8 +66,8 @@ function App() {
 
   return (
     <main>
-      <TodoInput todoValue={todoValue} setTodoValue={setTodoValue} handleAddTodos={handleAddTodos} />
       <TodoList handleEditTodo={handleEditTodo} handleDeleteTodo={handleDeleteTodo} todos={todos} />
+      <TodoInput editing={editing} todoValue={todoValue} setTodoValue={setTodoValue} handleAddTodos={handleAddTodos} />
     </main>
   )
 }

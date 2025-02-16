@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 export interface TodoInputProps {
+    editing: boolean;
     handleAddTodos: (todo: string) => void;
     todoValue: string;
     setTodoValue: (value: string) => void;
